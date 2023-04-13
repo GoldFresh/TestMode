@@ -6,8 +6,9 @@ import org.junit.jupiter.api.Test;
 import ru.netology.data.DataGenerator;
 import ru.netology.data.RegistrationDto;;
 
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
+import java.time.Duration;
+
+import static com.codeborne.selenide.Selenide.*;
 
 public class UsersRegistrationTest {
 
@@ -22,8 +23,9 @@ public class UsersRegistrationTest {
         $("[data-test-id=login] input").setValue(activeUser.getLogin());
         $("[data-test-id=password] input").setValue(activeUser.getPassword());
         $("[data-test-id=action-login]").click();
-        $(".App_appContainer__3jRx1").shouldHave(Condition.text("Личный кабинет")).shouldBe(Condition.visible);
+        $x("//*[@id='root']").shouldHave(Condition.text("Личный кабинет")).shouldBe(Condition.visible);
     }
+
 
     @Test
     void shouldGetErrorIfBlockedUser() {
@@ -31,8 +33,10 @@ public class UsersRegistrationTest {
         $("[data-test-id=login] input").setValue(blockedUser.getLogin());
         $("[data-test-id=password] input").setValue(blockedUser.getPassword());
         $("[data-test-id=action-login]").click();
-        $("[data-test-id=error-notification] .notification__content").shouldHave(Condition.text("Пользователь заблокирован"));
+        $("[data-test-id=error-notification] .notification__content").
+                shouldHave(Condition.text("Пользователь заблокирован")).shouldBe(Condition.visible);
     }
+
 
     @Test
     void shouldGetErrorIfWrongLogin() {
@@ -40,7 +44,8 @@ public class UsersRegistrationTest {
         $("[data-test-id=login] input").setValue(invalidLoginUser.getLogin());
         $("[data-test-id=password] input").setValue(invalidLoginUser.getPassword());
         $("[data-test-id=action-login]").click();
-        $("[data-test-id=error-notification] .notification__content").shouldHave(Condition.text("Неверно указан логин или пароль"));
+        $("[data-test-id=error-notification] .notification__content").
+                shouldHave(Condition.text("Неверно указан логин или пароль")).shouldBe(Condition.visible);
     }
 
     @Test
@@ -49,6 +54,17 @@ public class UsersRegistrationTest {
         $("[data-test-id=login] input").setValue(invalidPassword.getLogin());
         $("[data-test-id=password] input").setValue(invalidPassword.getPassword());
         $("[data-test-id=action-login]").click();
-        $("[data-test-id=error-notification] .notification__content").shouldHave(Condition.text("Неверно указан логин или пароль"));
+        $("[data-test-id=error-notification] .notification__content").
+                shouldHave(Condition.text("Неверно указан логин или пароль")).shouldBe(Condition.visible);
+    }
+
+    @Test
+    void shouldGetUnregisteredUser() {
+        RegistrationDto unregisteredUser = DataGenerator.getUnregisteredUser("active");
+        $("[data-test-id=login] input").setValue(unregisteredUser.getLogin());
+        $("[data-test-id=password] input").setValue(unregisteredUser.getPassword());
+        $("[data-test-id=action-login]").click();
+        $("[data-test-id=error-notification] .notification__content").
+                shouldHave(Condition.text("Неверно указан логин или пароль")).shouldBe(Condition.visible);
     }
 }

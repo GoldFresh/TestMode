@@ -72,4 +72,9 @@ public class DataGenerator {
         sendRequest(new RegistrationDto(getRandomLogin(), getRandomPassword(), status));
         return new RegistrationDto(getRandomLogin(), getRandomPassword(), status);
     }
+
+    public static RegistrationDto getUnregisteredUser(String status) {
+        sendRequest(new RegistrationDto(getRandomLogin(), getRandomPassword(), status));
+        return new RegistrationDto(getRandomLogin(), getRandomPassword(), status);
+    }
 }
